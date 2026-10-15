@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: practicas-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: practicas
+      POSTGRES_PASSWORD: practicas
+      POSTGRES_DB: practicas
+    volumes:
+      - practicas_pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U practicas -d practicas"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  practicas_pgdata:
