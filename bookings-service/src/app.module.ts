@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BookingModule } from './booking/infrastructure/booking.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: config.get<string>('DB_SYNCHRONIZE') === 'true',
       }),
     }),
+    BookingModule,
   ],
 })
 export class AppModule {}
