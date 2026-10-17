@@ -1,0 +1,2 @@
+export const ROOMS_CLIENT = Symbol('ROOMS_CLIENT');
+export const NOTIFICATION_CLIENT = Symbol('NOTIFICATION_CLIENT');

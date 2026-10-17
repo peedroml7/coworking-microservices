@@ -4,7 +4,7 @@ import { CreateBookingInterface } from '../../domain/interface/create-booking.in
 import { Booking } from '../../domain/model/booking';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BookingEntity } from '../entity/booking.entity';
-import { Repository } from 'typeorm';
+import { LessThan, MoreThan, Repository } from 'typeorm';
 
 @Injectable()
 export class BookingRespositoryImplementation implements BookingRepository {
@@ -24,5 +24,15 @@ export class BookingRespositoryImplementation implements BookingRepository {
   public async delete(id: string): Promise<boolean> {
     const result = await this.orm.delete({ id });
     return (result.affected ?? 0) > 0;
+  }
+
+  public async hasOverlap(
+    room_id: string,
+    start: Date,
+    end: Date,
+  ): Promise<boolean> {
+    return this.orm.exists({
+      where: { room_id, start: LessThan(end), end: MoreThan(start) },
+    });
   }
 }

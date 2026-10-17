@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Booking } from '../../domain/model/booking';
+import { BookingStatusEnum } from '../../domain/enum/booking-status.enum';
 
 @Entity('bookings')
 export class BookingEntity implements Booking {
@@ -17,4 +18,10 @@ export class BookingEntity implements Booking {
 
   @Column()
   customer_email: string;
+
+  @Column()
+  status: BookingStatusEnum;
+
+  @Column()
+  total_price: number;
 }

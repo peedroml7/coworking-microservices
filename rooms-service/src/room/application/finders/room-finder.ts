@@ -1,10 +1,10 @@
-import { Inject, NotFoundException } from '@nestjs/common';
+import { Inject } from '@nestjs/common';
 import { Room } from '../../domain/model/room';
 import {
   ROOM_REPOSITORY,
   type RoomRepository,
 } from '../../domain/repository/room.repository';
-import { AvailabilityInterface } from '../../domain/interface/availability.interface';
+import { RoomNotFoundError } from '../../domain/error/room-not-found.error';
 
 export class RoomFinder {
   constructor(
@@ -18,9 +18,7 @@ export class RoomFinder {
   public async getRoom(id: string): Promise<Room> {
     const room: Room | null = await this.repository.getRoom(id);
 
-    if (!room) {
-      throw new NotFoundException('Room not found');
-    }
+    if (!room) throw new RoomNotFoundError(id);
 
     return room;
   }

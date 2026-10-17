@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoomModule } from './room/infrastructura/room.module';
-import { RoomEntity } from './room/infrastructura/entity/room.entity';
+import { RoomModule } from './room/infrastructure/room.module';
+import { RoomEntity } from './room/infrastructure/entity/room.entity';
 
 @Module({
   imports: [
