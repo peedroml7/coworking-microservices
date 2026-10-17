@@ -4,7 +4,6 @@ import {
   type BookingRepository,
 } from '../../domain/repository/booking.repository';
 import { ResponseInterface } from '../../domain/interface/response.interface';
-import { BookingNotFoundError } from '../../domain/error/booking-not-found.error';
 import {
   NOTIFICATION_GATEWAY,
   type NotificationGateway,
@@ -22,17 +21,14 @@ export class BookingDeleter {
   public async delete(id: string): Promise<ResponseInterface> {
     const deletedBooking: Booking = await this.finder.findOne(id);
 
-    const deleted: boolean = await this.repository.delete(id);
-
-    if (!deleted) {
-      throw new BookingNotFoundError('Booking not found');
-    }
+    await this.repository.delete(id);
 
     this.gateway.sendNotification(
       deletedBooking.id,
       deletedBooking.room_id,
       'Booking cancelled successfully',
       deletedBooking.customer_email,
+      'booking_cancelled',
     );
 
     return {

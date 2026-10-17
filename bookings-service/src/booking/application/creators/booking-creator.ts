@@ -56,6 +56,7 @@ export class BookingCreator {
       bookingCreated.room_id,
       'Booking created successfully',
       bookingCreated.customer_email,
+      'booking_created',
     );
 
     return bookingCreated;

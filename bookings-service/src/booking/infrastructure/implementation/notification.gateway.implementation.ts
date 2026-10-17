@@ -14,8 +14,9 @@ export class NotificationGatewayImplementation implements NotificationGateway {
     room_id: string,
     text: string,
     customer_email: string,
+    event_type: string,
   ): void {
-    this.client.emit('booking_created', {
+    this.client.emit(event_type, {
       booking_id,
       room_id,
       text,
