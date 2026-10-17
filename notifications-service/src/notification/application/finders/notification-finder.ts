@@ -1,9 +1,10 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import {
   NOTIFICATION_REPOSITORY,
   type NotificationRepository,
 } from '../../domain/repository/notification.repository';
 import { Notification } from '../../domain/model/notification';
+import { EmailNotFoundError } from '../../domain/error/email-not-found.error';
 
 @Injectable()
 export class NotificationFinder {
@@ -17,7 +18,7 @@ export class NotificationFinder {
       await this.repository.getNotificationsByEmail(email);
 
     if (!notification) {
-      throw new NotFoundException('User with provided email not found');
+      throw new EmailNotFoundError();
     }
 
     return notification;

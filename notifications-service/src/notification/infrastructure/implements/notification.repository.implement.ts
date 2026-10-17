@@ -4,6 +4,7 @@ import { Notification } from '../../domain/model/notification';
 import { InjectRepository } from '@nestjs/typeorm';
 import { NotificationEntity } from '../entity/notification.entity';
 import { Repository } from 'typeorm';
+import { IncomingBookingEventInterface } from '../../domain/interface/incoming-booking-event.interface';
 
 @Injectable()
 export class NotificationsRepositoryImplement implements NotificationRepository {
@@ -11,6 +12,12 @@ export class NotificationsRepositoryImplement implements NotificationRepository 
     @InjectRepository(NotificationEntity)
     private readonly repo: Repository<NotificationEntity>,
   ) {}
+
+  async saveNotification(
+    bookingData: IncomingBookingEventInterface,
+  ): Promise<Notification> {
+    return this.repo.save(bookingData);
+  }
 
   async getNotificationsByEmail(email: string): Promise<Notification | null> {
     return await this.repo.findOne({ where: { customer_email: email } });
