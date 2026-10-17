@@ -20,7 +20,11 @@ export class BookingController {
 
   @MessagePattern('create_booking')
   public async create(@Payload() data: CreateBookingInterface) {
-    return await this.creator.create(data);
+    return await this.creator.create({
+      ...data,
+      start: new Date(data.start),
+      end: new Date(data.end),
+    });
   }
 
   @MessagePattern('delete_booking')

@@ -19,7 +19,7 @@ export class NotificationsRepositoryImplement implements NotificationRepository 
     return this.repo.save(bookingData);
   }
 
-  async getNotificationsByEmail(email: string): Promise<Notification | null> {
-    return await this.repo.findOne({ where: { customer_email: email } });
+  async getNotificationsByEmail(email: string): Promise<Notification[]> {
+    return await this.repo.find({ where: { customer_email: email } });
   }
 }

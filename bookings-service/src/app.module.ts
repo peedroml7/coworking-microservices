@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookingModule } from './booking/infrastructure/booking.module';
+import { BookingEntity } from './booking/infrastructure/entity/booking.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { BookingModule } from './booking/infrastructure/booking.module';
         username: config.getOrThrow<string>('DB_USERNAME'),
         password: config.getOrThrow<string>('DB_PASSWORD'),
         database: config.getOrThrow<string>('DB_NAME'),
-        entities: [],
+        entities: [BookingEntity],
         synchronize: config.get<string>('DB_SYNCHRONIZE') === 'true',
       }),
     }),

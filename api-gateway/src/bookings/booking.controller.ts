@@ -24,7 +24,7 @@ export class BookingController {
   public async getBooking(@Param('id') id: string): Promise<BookingInterface> {
     return firstValueFrom(
       this.service
-        .send<BookingInterface>(id, 'find_booking_by_id')
+        .send<BookingInterface>('find_booking_by_id', id)
         .pipe(timeout(3000)),
     );
   }
@@ -35,7 +35,7 @@ export class BookingController {
   ): Promise<BookingInterface> {
     return firstValueFrom(
       this.service
-        .send<BookingInterface>(createBookingDto, 'create_booking')
+        .send<BookingInterface>('create_booking', createBookingDto)
         .pipe(timeout(3000)),
     );
   }
@@ -46,7 +46,7 @@ export class BookingController {
   ): Promise<ResponseInterface> {
     return firstValueFrom(
       this.service
-        .send<ResponseInterface>(id, 'delete_booking')
+        .send<ResponseInterface>('delete_booking', id)
         .pipe(timeout(3000)),
     );
   }

@@ -22,6 +22,6 @@ export class BookingEntity implements Booking {
   @Column()
   status: BookingStatusEnum;
 
-  @Column()
+  @Column('float')
   total_price: number;
 }

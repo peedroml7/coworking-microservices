@@ -13,8 +13,8 @@ export class NotificationFinder {
     private readonly repository: NotificationRepository,
   ) {}
 
-  public async getNotificationsByEmail(email: string): Promise<Notification> {
-    const notification: Notification | null =
+  public async getNotificationsByEmail(email: string): Promise<Notification[]> {
+    const notification: Notification[] =
       await this.repository.getNotificationsByEmail(email);
 
     if (!notification) {

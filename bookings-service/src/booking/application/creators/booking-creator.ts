@@ -16,6 +16,7 @@ import {
   NOTIFICATION_GATEWAY,
   type NotificationGateway,
 } from '../../domain/gateway/notification.gateway';
+import { InvalidBookingDatesError } from '../../domain/error/invalid-booking-dates.error';
 
 export class BookingCreator {
   constructor(
@@ -28,6 +29,9 @@ export class BookingCreator {
   private MS_PER_HOUR = 1000 * 60 * 60;
 
   public async create(newBooking: CreateBookingInterface): Promise<Booking> {
+    if (newBooking.end <= newBooking.start)
+      throw new InvalidBookingDatesError();
+
     if (
       await this.repository.hasOverlap(
         newBooking.room_id,

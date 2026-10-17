@@ -12,9 +12,7 @@ export class RoomController {
   @Get()
   public async getRooms(): Promise<RoomInterface[]> {
     return firstValueFrom(
-      this.service
-        .send<RoomInterface[]>(null, 'find_rooms')
-        .pipe(timeout(3000)),
+      this.service.send<RoomInterface[]>('find_rooms', {}).pipe(timeout(3000)),
     );
   }
 
@@ -22,7 +20,7 @@ export class RoomController {
   public async getRoom(@Param('id') id: string): Promise<RoomInterface> {
     return firstValueFrom(
       this.service
-        .send<RoomInterface>(id, 'find_room_by_id')
+        .send<RoomInterface>('find_room_by_id', id)
         .pipe(timeout(3000)),
     );
   }
@@ -33,7 +31,7 @@ export class RoomController {
   ): Promise<RoomInterface> {
     return firstValueFrom(
       this.service
-        .send<RoomInterface>(createRoomDto, 'create_room')
+        .send<RoomInterface>('create_room', createRoomDto)
         .pipe(timeout(3000)),
     );
   }
