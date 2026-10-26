@@ -22,7 +22,13 @@ client -> api-gateway --send--> rooms-service
                       --send--> notifications-service
 ```
 
-When a booking is created, bookings asks rooms for the room (to check it exists and get the hourly price), checks for overlapping bookings in its own table, saves it and emits `booking_created`. Notifications listens to that event and stores the message for the customer.
+When a booking is created, bookings checks that the dates make sense, looks for overlapping bookings in its own table, asks rooms for the room (to check it exists and get the hourly price), works out the total price, saves it and emits `booking_created`. Cancelling a booking emits `booking_cancelled`. Notifications listens to both events and stores a message for the customer.
+
+## Errors
+
+Use cases throw domain errors (`BookingNotFoundError`, `BookingConflictError`, `RoomNotFoundError`...) that carry their own status code and know nothing about HTTP or Nest. Each service has an RPC filter that turns them into a plain `{ statusCode, message }` object, which is what travels over TCP. The gateway has an HTTP filter that reads that object and answers with the right status, so a missing room ends up as a 404 for the client instead of a generic 500.
+
+When bookings calls rooms, its gateway adapter catches the error coming back and turns it into a bookings domain error, so the filter in bookings can handle it like any other.
 
 ## Layout
 
@@ -31,7 +37,7 @@ Each internal service follows the same structure:
 ```
 src/<resource>/
   domain/          models, repository and gateway interfaces
-  application/     use cases (finders, creators)
+  application/     use cases (finders, creators, deleters)
   infrastructure/  message handlers, TypeORM entities, repository implementations, Nest module
 ```
 
@@ -71,4 +77,10 @@ Start the internal services first and the gateway last.
 npm test
 ```
 
-Unit tests cover the use cases with in-memory repositories.
+Unit tests cover the use cases of rooms and notifications with in-memory repositories.
+
+## Next
+
+- Users service with JWT auth and roles, checked in the gateway
+- RabbitMQ instead of TCP for events, so they are not lost if notifications is down
+- TypeORM migrations instead of `synchronize`, Docker Compose for every service and CI
