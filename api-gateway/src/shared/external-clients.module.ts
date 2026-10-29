@@ -9,6 +9,7 @@ import {
 export const BOOKINGS_SERVICE = Symbol('BOOKINGS_SERVICE');
 export const ROOMS_SERVICE = Symbol('ROOMS_SERVICE');
 export const NOTIFICATIONS_SERVICE = Symbol('NOTIFICATIONS_SERVICE');
+export const USERS_SERVICE = Symbol('USERS_SERVICE');
 
 const tcpClient = (
   name: symbol,
@@ -31,6 +32,7 @@ const tcpClient = (
       tcpClient(BOOKINGS_SERVICE, 'BOOKINGS'),
       tcpClient(ROOMS_SERVICE, 'ROOMS'),
       tcpClient(NOTIFICATIONS_SERVICE, 'NOTIFICATIONS'),
+      tcpClient(USERS_SERVICE, 'USERS'),
     ]),
   ],
   exports: [ClientsModule],
