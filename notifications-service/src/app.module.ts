@@ -3,9 +3,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationModule } from './notification/infrastructure/notification.module';
 import { NotificationEntity } from './notification/infrastructure/entity/notification.entity';
+import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        connection: {
+          host: configService.getOrThrow<string>('QUEUE_HOST'),
+          port: Number(configService.getOrThrow<string>('QUEUE_PORT')),
+        },
+      }),
+    }),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],

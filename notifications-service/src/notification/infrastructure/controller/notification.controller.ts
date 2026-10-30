@@ -12,19 +12,19 @@ export class NotificationController {
   ) {}
 
   @EventPattern('booking_created')
-  bookingCreated(@Payload() data: IncomingBookingEventInterface) {
-    this.creator.create(data);
+  async bookingCreated(@Payload() data: IncomingBookingEventInterface) {
+    await this.creator.create(data);
     console.log(`Booking with ID: ${data.booking_id} created successfully`);
   }
 
   @EventPattern('booking_cancelled')
-  bookingDeleted(@Payload() data: IncomingBookingEventInterface) {
-    this.creator.create(data);
+  async bookingDeleted(@Payload() data: IncomingBookingEventInterface) {
+    await this.creator.create(data);
     console.log(`Booking with ID: ${data.booking_id} cancelled successfully`);
   }
 
   @MessagePattern('find_notifications_by_email')
-  getNotificationsByEmail(@Payload() data: string) {
-    return this.finder.getNotificationsByEmail(data);
+  async getNotificationsByEmail(@Payload() data: string) {
+    return await this.finder.getNotificationsByEmail(data);
   }
 }
