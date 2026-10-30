@@ -14,6 +14,7 @@ import { HttpClientModule } from '@nestjs/http-client';
 import { ConfigService } from '@nestjs/config';
 import { HTTT_CLIENT_NAME } from './constants/http-client-name.constant';
 import { BullMQNotificationProcessor } from './queue/bullmq-notification.processor';
+import { ProviderTokenService } from './service/provider-token.service';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { BullMQNotificationProcessor } from './queue/bullmq-notification.process
     NotificationFinder,
     NotificationCreator,
     BullMQNotificationProcessor,
+    ProviderTokenService,
     {
       provide: NOTIFICATION_REPOSITORY,
       useClass: NotificationsRepositoryImplement,
