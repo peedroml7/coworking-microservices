@@ -24,7 +24,10 @@ export class BullMQNotificationProcessor extends WorkerHost {
       const token: string = await this.providerTokenService.getToken();
 
       await this.fakeProvider.post('/send', {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'idempotency-key': job.id,
+        },
         json: job.data,
       });
     } catch (error: unknown) {
