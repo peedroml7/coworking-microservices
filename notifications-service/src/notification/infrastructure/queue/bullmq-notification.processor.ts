@@ -23,13 +23,18 @@ export class BullMQNotificationProcessor extends WorkerHost {
     try {
       const token: string = await this.providerTokenService.getToken();
 
-      await this.fakeProvider.post('/send', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'idempotency-key': job.id,
-        },
-        json: job.data,
-      });
+      try {
+        await this.send(job, token);
+      } catch (error: unknown) {
+        if (!(error instanceof HttpResponseError) || error.status !== 401) {
+          throw error;
+        }
+
+        // The provider rejected the cached token, so renew it and retry once
+        this.providerTokenService.invalidateToken();
+        const newToken: string = await this.providerTokenService.getToken();
+        await this.send(job, newToken);
+      }
     } catch (error: unknown) {
       const isClientError =
         error instanceof HttpResponseError &&
@@ -47,5 +52,15 @@ export class BullMQNotificationProcessor extends WorkerHost {
       // 5xx, 429, timeouts and network errors are retried by BullMQ
       throw error;
     }
+  }
+
+  private async send(job: Job, token: string): Promise<void> {
+    await this.fakeProvider.post('/send', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'idempotency-key': String(job.id),
+      },
+      json: job.data,
+    });
   }
 }

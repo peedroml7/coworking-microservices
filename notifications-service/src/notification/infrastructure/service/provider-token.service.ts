@@ -12,7 +12,7 @@ export class ProviderTokenService {
   // Timestamp in ms when the cached token stops being valid
   private expiresAt = 0;
 
-  private accessToken: string;
+  private accessToken: string | null = null;
   private providerId: string;
   private providerSecret: string;
 
@@ -43,6 +43,12 @@ export class ProviderTokenService {
     this.expiresAt = Date.now() + data.expires_in * 1000;
 
     return this.accessToken;
+  }
+
+  // Drops the cached token so the next getToken() asks for a new one
+  public invalidateToken(): void {
+    this.accessToken = null;
+    this.expiresAt = 0;
   }
 
   // It asks if the token will keep alive in 10s
