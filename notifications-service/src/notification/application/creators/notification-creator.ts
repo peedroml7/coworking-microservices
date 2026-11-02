@@ -8,7 +8,7 @@ import {
   NOTIFICATION_SENDER,
   type NotificationSenderInterface,
 } from '../../domain/interface/notification-sender.interface';
-import { Notification } from '../../domain/model/notification';
+import { DuplicateEventError } from '../../domain/error/duplicate-event.error';
 
 @Injectable()
 export class NotificationCreator {
@@ -19,17 +19,17 @@ export class NotificationCreator {
     private readonly sender: NotificationSenderInterface,
   ) {}
 
-  public async create(
-    booking: IncomingBookingEventInterface,
-  ): Promise<Notification> {
-    const notification: Notification =
+  public async create(booking: IncomingBookingEventInterface): Promise<void> {
+    try {
       await this.repository.saveNotification(booking);
+    } catch (error: unknown) {
+      if (!(error instanceof DuplicateEventError)) throw error;
+    }
 
     await this.sender.send({
+      event_id: booking.event_id,
       to: booking.customer_email,
       subject: booking.text,
     });
-
-    return notification;
   }
 }

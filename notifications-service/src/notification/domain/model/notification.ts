@@ -4,4 +4,5 @@ export interface Notification {
   room_id: string;
   text: string;
   customer_email: string;
+  event_id: string;
 }

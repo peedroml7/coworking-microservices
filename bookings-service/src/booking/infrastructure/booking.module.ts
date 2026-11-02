@@ -13,6 +13,7 @@ import { NOTIFICATION_CLIENT, ROOMS_CLIENT } from './token/tokens';
 import { ROOM_GATEWAY } from '../domain/gateway/room.gateway';
 import { NOTIFICATION_GATEWAY } from '../domain/gateway/notification.gateway';
 import { NotificationGatewayImplementation } from './implementation/notification.gateway.implementation';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -23,10 +24,19 @@ import { NotificationGatewayImplementation } from './implementation/notification
         transport: Transport.TCP,
         options: { host: 'localhost', port: 3002 },
       },
+    ]),
+    ClientsModule.registerAsync([
       {
         name: NOTIFICATION_CLIENT,
-        transport: Transport.TCP,
-        options: { host: 'localhost', port: 3003 },
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [config.getOrThrow<string>('RABBITMQ_URL')],
+            queue: 'notifications_queue',
+            queueOptions: { durable: true },
+          },
+        }),
       },
     ]),
   ],

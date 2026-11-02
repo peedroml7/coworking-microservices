@@ -10,6 +10,6 @@ export class BullMQNotificationSender implements NotificationSenderInterface {
   constructor(@InjectQueue(NOTIFICATION_QUEUE) private readonly queue: Queue) {}
 
   public async send(data: NotificationMessageInterface): Promise<void> {
-    await this.queue.add('send_notification', data);
+    await this.queue.add('send_notification', data, { jobId: data.event_id });
   }
 }

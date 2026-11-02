@@ -17,4 +17,7 @@ export class NotificationEntity implements Notification {
 
   @Column()
   customer_email: string;
+
+  @Column({ type: 'uuid', unique: true, nullable: true })
+  event_id: string;
 }

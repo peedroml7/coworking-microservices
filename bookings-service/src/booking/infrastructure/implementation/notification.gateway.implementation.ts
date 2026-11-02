@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { NotificationGateway } from '../../domain/gateway/notification.gateway';
 import { ClientProxy } from '@nestjs/microservices';
 import { NOTIFICATION_CLIENT } from '../token/tokens';
+import { randomUUID } from 'node:crypto';
 
 @Injectable()
 export class NotificationGatewayImplementation implements NotificationGateway {
@@ -21,6 +22,7 @@ export class NotificationGatewayImplementation implements NotificationGateway {
       room_id,
       text,
       customer_email,
+      event_id: randomUUID(),
     });
   }
 }
