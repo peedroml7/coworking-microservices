@@ -19,7 +19,13 @@ async function bootstrap() {
     options: {
       urls: [process.env.RABBITMQ_URL!],
       queue: 'notifications_queue',
-      queueOptions: { durable: true },
+      queueOptions: {
+        durable: true,
+        arguments: {
+          'x-dead-letter-exchange': '',
+          'x-dead-letter-routing-key': 'notifications_queue.dlq',
+        },
+      },
       noAck: false,
     },
   });

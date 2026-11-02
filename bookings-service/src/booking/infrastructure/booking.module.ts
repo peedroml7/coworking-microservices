@@ -34,7 +34,13 @@ import { ConfigService } from '@nestjs/config';
           options: {
             urls: [config.getOrThrow<string>('RABBITMQ_URL')],
             queue: 'notifications_queue',
-            queueOptions: { durable: true },
+            queueOptions: {
+              durable: true,
+              arguments: {
+                'x-dead-letter-exchange': '',
+                'x-dead-letter-routing-key': 'notifications_queue.dlq',
+              },
+            },
           },
         }),
       },
